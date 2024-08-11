@@ -3,7 +3,6 @@ import { FaTimes } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { createProject } from '../services/blockchain'
 import { useGlobalState, setGlobalState } from '../store'
-import CreateProject2 from './CreateProject copy' // Asegúrate de que la ruta sea correcta
 
 const CreateProject = () => {
   const [createModal] = useGlobalState('createModal')
@@ -179,9 +178,6 @@ const CreateProject = () => {
             Submit Project
           </button>
         </form>
-
-        {/* Render CreateProject2 */}
-        <CreateProject2 />
       </div>
     </div>
   )

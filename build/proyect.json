@@ -1,0 +1,38 @@
+{
+  "proyectos": [
+    {
+      "id": 1,
+      "titulo": "Proyecto de Inversión en Blockchain para Agricultura Sostenible",
+      "costo": {
+        "cantidad": 1000,
+        "moneda": "BTC"
+      },
+      "foto": "https://example.com/image1.jpg",
+      "fecha_inicial": "2024-08-15",
+      "fecha_expiracion": "2025-08-15",
+      "motivo_financiero": "Apoyar a agricultores en crisis climática con tecnología blockchain.",
+      "tema": "Crypto Semilla",
+      "descripcion": {
+        "motivo_inversion": "Invertir en el proyecto 'Crypto Semilla' es clave para garantizar la sostenibilidad agrícola en Bolivia, permitiendo a los agricultores acceder a fondos durante emergencias climáticas y promover prácticas agrícolas sostenibles.",
+        "razon_para_donar": "Donar al proyecto ayuda a construir un futuro más seguro para la agricultura, protegiendo la seguridad alimentaria y apoyando el desarrollo rural a través de la innovación tecnológica."
+      }
+    },
+    {
+      "id": 2,
+      "titulo": "Fondo de Resiliencia Climática con Blockchain",
+      "costo": {
+        "cantidad": 2000,
+        "moneda": "ETH"
+      },
+      "foto": "https://example.com/image2.jpg",
+      "fecha_inicial": "2024-09-01",
+      "fecha_expiracion": "2025-09-01",
+      "motivo_financiero": "Crear un fondo de emergencia para agricultores afectados por el cambio climático utilizando contratos inteligentes.",
+      "tema": "Crypto Semilla",
+      "descripcion": {
+        "motivo_inversion": "La inversión en 'Crypto Semilla' facilita la creación de un fondo de resiliencia que responde automáticamente a desastres naturales, asegurando que los recursos lleguen rápidamente a los afectados.",
+        "razon_para_donar": "Tu donación contribuye a un sistema innovador que protege a los agricultores más vulnerables, garantizando su sustento incluso en las peores crisis."
+      }
+    }
+  ]
+}

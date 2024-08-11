@@ -9,9 +9,11 @@ contract AgriculturalCrowdfunding {
     bool public goalReached;
     uint256 public withdrawDelay = 1 days;
     
+    uint256 public constant PRECISION = 1e18; // Factor para manejar decimales
+    
     struct Beneficiary {
         address payable beneficiaryAddress;
-        uint256 requestedAmount;
+        uint256 requestedAmount;  // En formato decimal (simulado)
         uint256 approvalTime;
         bool isApproved;
     }
@@ -19,20 +21,17 @@ contract AgriculturalCrowdfunding {
     mapping(address => Beneficiary) public beneficiaries;
     mapping(address => bool) public isVerified;  // Mapeo para verificar beneficiarios
     
-    address public ngoAddress;  // Dirección de la ONG
-    
     event FundDonated(address donor, uint256 amount);
     event FundsWithdrawn(address beneficiary, uint256 amount);
     event BeneficiaryVerified(address beneficiary);
     event BeneficiaryApproved(address beneficiary);
     
-    constructor(uint256 _fundGoal, uint256 _fundDeadline, address _ngoAddress) {
+    constructor(uint256 _fundGoal, uint256 _fundDeadline) {
         owner = msg.sender;
-        fundGoal = _fundGoal;
+        fundGoal = _fundGoal * PRECISION;  // Convertir a formato decimal
         fundDeadline = _fundDeadline;
         totalFunds = 0;
         goalReached = false;
-        ngoAddress = _ngoAddress;  // Establecer la dirección de la ONG
     }
     
     modifier onlyOwner() {
@@ -40,17 +39,13 @@ contract AgriculturalCrowdfunding {
         _;
     }
     
-    modifier onlyNgo() {
-        require(msg.sender == ngoAddress, "Only the NGO can perform this action.");
-        _;
-    }
-    
     function donate() external payable {
         require(block.timestamp < fundDeadline, "Funding period has ended.");
         require(msg.value > 0, "Donation must be greater than 0.");
         
-        totalFunds += msg.value;
-        emit FundDonated(msg.sender, msg.value);
+        uint256 donationAmount = msg.value * PRECISION;
+        totalFunds += donationAmount;
+        emit FundDonated(msg.sender, donationAmount);
         
         if (totalFunds >= fundGoal) {
             goalReached = true;
@@ -63,15 +58,16 @@ contract AgriculturalCrowdfunding {
         require(isVerified[msg.sender], "Beneficiary not verified.");
         require(beneficiaries[msg.sender].beneficiaryAddress == address(0), "Already requested funds.");
         
+        uint256 requestedAmount = amount * PRECISION;
         beneficiaries[msg.sender] = Beneficiary({
             beneficiaryAddress: payable(msg.sender),
-            requestedAmount: amount,
+            requestedAmount: requestedAmount,
             approvalTime: 0,
             isApproved: false
         });
     }
     
-    function verifyBeneficiary(address beneficiary) external onlyNgo {
+    function verifyBeneficiary(address beneficiary) external onlyOwner {
         isVerified[beneficiary] = true;
         emit BeneficiaryVerified(beneficiary);
     }
@@ -91,12 +87,12 @@ contract AgriculturalCrowdfunding {
     function withdrawFunds() external {
         require(beneficiaries[msg.sender].isApproved, "Funds not approved.");
         require(beneficiaries[msg.sender].approvalTime + withdrawDelay <= block.timestamp, "Withdrawal delay not met.");
-        require(address(this).balance >= beneficiaries[msg.sender].requestedAmount, "Insufficient funds.");
+        require(address(this).balance >= beneficiaries[msg.sender].requestedAmount / PRECISION, "Insufficient funds.");
         
         uint256 amount = beneficiaries[msg.sender].requestedAmount;
         beneficiaries[msg.sender].requestedAmount = 0;
-        payable(msg.sender).transfer(amount);
+        payable(msg.sender).transfer(amount / PRECISION);
         
         emit FundsWithdrawn(msg.sender, amount);
-        }
+    }
 }

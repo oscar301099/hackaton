@@ -1,63 +1,81 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.0;
 
-contract DonationPlatform {
+contract AgriculturalCrowdfunding {
     address public owner;
-    uint public donationCount;
-    uint public totalDonations;
-
-    struct Donation {
-        uint id;
-        address donor;
-        uint amount;
-        uint timestamp;
+    uint256 public fundGoal;
+    uint256 public totalFunds;
+    uint256 public fundDeadline;
+    bool public goalReached;
+    uint256 public withdrawDelay = 1 days;
+    
+    struct Beneficiary {
+        address payable beneficiaryAddress;
+        uint256 requestedAmount;
+        uint256 approvalTime;
+        bool isApproved;
     }
-
-    mapping(uint => Donation) public donations;
-
-    event DonationReceived(
-        uint id,
-        address indexed donor,
-        uint amount,
-        uint timestamp
-    );
-
-    modifier ownerOnly() {
-        require(msg.sender == owner, "Owner reserved only");
-        _;
-    }
-
-    constructor() {
+    
+    mapping(address => Beneficiary) public beneficiaries;
+    
+    event FundDonated(address donor, uint256 amount);
+    event FundsWithdrawn(address beneficiary, uint256 amount);
+    event BeneficiaryApproved(address beneficiary);
+    
+    constructor(uint256 _fundGoal, uint256 _fundDeadline) {
         owner = msg.sender;
+        fundGoal = _fundGoal;
+        fundDeadline = _fundDeadline;
+        totalFunds = 0;
+        goalReached = false;
     }
-
-    function donate() public payable returns (bool) {
-        require(msg.value > 0, "Donation amount must be greater than zero");
-        donationCount++;
-        totalDonations += msg.value;
-
-        donations[donationCount] = Donation({
-            id: donationCount,
-            donor: msg.sender,
-            amount: msg.value,
-            timestamp: block.timestamp
+    
+    function donate() external payable {
+        require(block.timestamp < fundDeadline, "Funding period has ended.");
+        require(msg.value > 0, "Donation must be greater than 0.");
+        
+        totalFunds += msg.value;git
+        emit FundDonated(msg.sender, msg.value);
+        
+        if (totalFunds >= fundGoal) {
+            goalReached = true;
+        }
+    }
+    
+    function requestFunds(uint256 amount) external {
+        require(goalReached, "Funding goal has not been reached.");
+        require(amount > 0, "Requested amount must be greater than 0.");
+        require(beneficiaries[msg.sender].beneficiaryAddress == address(0), "Already requested funds.");
+        
+        beneficiaries[msg.sender] = Beneficiary({
+            beneficiaryAddress: payable(msg.sender),
+            requestedAmount: amount,
+            approvalTime: 0,
+            isApproved: false
         });
-
-        emit DonationReceived(donationCount, msg.sender, msg.value, block.timestamp);
-        return true;
     }
-
-    function withdraw(uint amount) public ownerOnly returns (bool) {
-        require(amount <= address(this).balance, "Insufficient balance");
-        payable(owner).transfer(amount);
-        return true;
+    
+    function approveFunds(address beneficiary) external {
+        require(msg.sender == owner, "Only the owner can approve funds.");
+        require(goalReached, "Funding goal has not been reached.");
+        require(beneficiaries[beneficiary].beneficiaryAddress != address(0), "Beneficiary not found.");
+        require(!beneficiaries[beneficiary].isApproved, "Funds already approved.");
+        
+        beneficiaries[beneficiary].approvalTime = block.timestamp;
+        beneficiaries[beneficiary].isApproved = true;
+        
+        emit BeneficiaryApproved(beneficiary);
     }
-
-    function getDonation(uint id) public view returns (Donation memory) {
-        return donations[id];
-    }
-
-    function getBalance() public view returns (uint) {
-        return address(this).balance;
+    
+    function withdrawFunds() external {
+        require(beneficiaries[msg.sender].isApproved, "Funds not approved.");
+        require(beneficiaries[msg.sender].approvalTime + withdrawDelay <= block.timestamp, "Withdrawal delay not met.");
+        require(address(this).balance >= beneficiaries[msg.sender].requestedAmount, "Insufficient funds.");
+        
+        uint256 amount = beneficiaries[msg.sender].requestedAmount;
+        beneficiaries[msg.sender].requestedAmount = 0;
+        payable(msg.sender).transfer(amount);
+        
+        emit FundsWithdrawn(msg.sender, amount);
     }
 }

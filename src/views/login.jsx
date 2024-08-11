@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const Login = () => {
+    console.log("hola")
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

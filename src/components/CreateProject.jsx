@@ -19,7 +19,7 @@ const CreateProject = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!title || !description || !cost || !date || !imageURL) return
+    if (!title || !description || !cost || !date ) return
 
     const params = {
       title,
@@ -148,7 +148,7 @@ const CreateProject = () => {
               placeholder="Image URL"
               onChange={(e) => setImageURL(e.target.value)}
               value={imageURL}
-              required
+       
             />
           </div>
 

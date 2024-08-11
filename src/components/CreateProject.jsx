@@ -30,7 +30,7 @@ const CreateProject = () => {
     }
 
     await createProject(params)
-    toast.success('Project created successfully, will reflect in 30sec.')
+    toast.success('Proyecto creado exitosamente, se reflejará en 30 segundos.')
     onClose()
   }
 
@@ -49,133 +49,109 @@ const CreateProject = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-screen h-screen flex
-    items-center justify-center bg-black bg-opacity-50
-    transform transition-transform duration-300 ${createModal}`}
+      className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-transform duration-300 ${createModal}`}
     >
-      <div
-        className="bg-white shadow-xl shadow-black
-        rounded-xl w-11/12 md:w-2/5 h-7/12 p-6"
-      >
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
         <form onSubmit={handleSubmit} className="flex flex-col">
-          <div className="flex justify-between items-center">
-            <p className="font-semibold">Add Project</p>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-gray-800">Subir Proyecto</h2>
             <button
               onClick={onClose}
               type="button"
-              className="border-0 bg-transparent focus:outline-none"
+              className="text-gray-400 hover:text-gray-600"
             >
-              <FaTimes />
+              <FaTimes size={20} />
             </button>
           </div>
 
-          <div className="flex justify-center items-center mt-5">
-            <div className="rounded-xl overflow-hidden h-20 w-20">
+          <div className="flex justify-center items-center mb-5">
+            <div className="rounded-lg overflow-hidden h-24 w-24 border border-gray-300">
               <img
                 src={
                   imageURL ||
-                  'https://media.wired.com/photos/5926e64caf95806129f50fde/master/pass/AnkiHP.jpg'
+                  'https://via.placeholder.com/150'
                 }
-                alt="project title"
+                alt="Imagen del proyecto"
                 className="h-full w-full object-cover cursor-pointer"
               />
             </div>
           </div>
 
-          <div
-            className="flex justify-between items-center
-          bg-gray-300 rounded-xl mt-5"
-          >
+          <div className="flex flex-col mb-4">
+            <label htmlFor="title" className="text-sm font-medium text-gray-600">Título</label>
             <input
-              className="block w-full bg-transparent
-            border-0 text-sm text-slate-500 focus:outline-none
-            focus:ring-0"
+              id="title"
               type="text"
               name="title"
-              placeholder="Title"
+              placeholder="Título del proyecto"
               onChange={(e) => setTitle(e.target.value)}
               value={title}
               required
+              className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          <div
-            className="flex justify-between items-center
-          bg-gray-300 rounded-xl mt-5"
-          >
+          <div className="flex flex-col mb-4">
+            <label htmlFor="cost" className="text-sm font-medium text-gray-600">Costo (ETH)</label>
             <input
-              className="block w-full bg-transparent
-            border-0 text-sm text-slate-500 focus:outline-none
-            focus:ring-0"
+              id="cost"
               type="number"
               step={0.01}
               min={0.01}
               name="cost"
-              placeholder="cost (ETH)"
+              placeholder="Costo en ETH"
               onChange={(e) => setCost(e.target.value)}
               value={cost}
               required
+              className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          <div
-            className="flex justify-between items-center
-          bg-gray-300 rounded-xl mt-5"
-          >
+          <div className="flex flex-col mb-4">
+            <label htmlFor="date" className="text-sm font-medium text-gray-600">Fecha de Expiración</label>
             <input
-              className="block w-full bg-transparent
-            border-0 text-sm text-slate-500 focus:outline-none
-            focus:ring-0"
+              id="date"
               type="date"
               name="date"
-              placeholder="Expires"
+              placeholder="Fecha de expiración"
               onChange={(e) => setDate(e.target.value)}
               value={date}
               required
+              className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          <div
-            className="flex justify-between items-center
-          bg-gray-300 rounded-xl mt-5"
-          >
+          <div className="flex flex-col mb-4">
+            <label htmlFor="imageURL" className="text-sm font-medium text-gray-600">URL de la Imagen</label>
             <input
-              className="block w-full bg-transparent
-            border-0 text-sm text-slate-500 focus:outline-none
-            focus:ring-0"
+              id="imageURL"
               type="url"
               name="imageURL"
-              placeholder="Image URL"
+              placeholder="URL de la imagen"
               onChange={(e) => setImageURL(e.target.value)}
               value={imageURL}
-       
+              className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          <div
-            className="flex justify-between items-center
-          bg-gray-300 rounded-xl mt-5"
-          >
+          <div className="flex flex-col mb-4">
+            <label htmlFor="description" className="text-sm font-medium text-gray-600">Descripción</label>
             <textarea
-              className="block w-full bg-transparent
-            border-0 text-sm text-slate-500 focus:outline-none
-            focus:ring-0"
-              type="text"
+              id="description"
               name="description"
-              placeholder="Description"
+              placeholder="Descripción del proyecto"
               onChange={(e) => setDescription(e.target.value)}
               value={description}
               required
+              className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             ></textarea>
           </div>
 
           <button
             type="submit"
-            className="inline-block px-6 py-2.5 bg-green-600
-            text-white font-medium text-md leading-tight
-            rounded-full shadow-md hover:bg-green-700 mt-5"
+            className="inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-md leading-tight rounded-full shadow-md hover:bg-green-700 transition duration-300"
           >
-            Submit Project
+            Crear Proyecto
           </button>
         </form>
       </div>

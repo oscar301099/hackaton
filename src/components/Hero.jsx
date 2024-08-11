@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { setGlobalState, useGlobalState } from '../store'
+import { createProject } from '../services/blockchain'
+import { useGlobalState, setGlobalState } from '../store'
+import { toast } from 'react-toastify'
 
 const Hero = () => {
   const [stats] = useGlobalState('stats')
@@ -21,6 +23,24 @@ const Hero = () => {
 
     fetchProjects()
   }, [])
+
+  const handleDonation = async (project) => {
+    try {
+      // Utilizando createProject para realizar la donación, puedes personalizar los parámetros.
+      const params = {
+        title: project.titulo,
+        description: project.motivo_financiero,
+        cost: project.costo.cantidad,
+        expiresAt: new Date(project.fecha_expiracion).getTime() / 1000,
+        imageURL: project.foto,
+      }
+
+      await createProject(params) // Aquí se llama a la función para realizar la acción (que puede ser donación en tu caso)
+      toast.success('Donation successful!')
+    } catch (error) {
+      toast.error('Donation failed. Please try again.')
+    }
+  }
 
   return (
     <div className="text-center bg-white text-gray-800 py-24 px-6">
@@ -56,6 +76,8 @@ const Hero = () => {
         </div>
       </div>
 
+
+
       <div className="grid grid-cols-1 gap-4 mt-10 sm:grid-cols-2 lg:grid-cols-4">
         {projects.map((project, index) => (
           <div key={index} className="relative w-full max-w-xs mx-auto cursor-pointer rounded-md shadow-md hover:shadow-lg transition duration-300">
@@ -78,7 +100,10 @@ const Hero = () => {
               <p className="mt-2 text-center text-xs text-gray-600">Fecha expiración: {project.fecha_expiracion}</p>
               <p className="mt-2 text-center text-xs text-gray-500">Motivo: {project.motivo_financiero}</p>
               <div className="mt-4 flex justify-center">
-                <button className="flex items-center justify-center rounded-lg border-2 border-[rgb(68,180,125)] bg-[rgb(68,180,125)] px-3 py-2 font-bold text-white hover:bg-[rgb(5,157,110)] transition duration-300">
+                <button
+                  onClick={() => handleDonation(project)}
+                  className="flex items-center justify-center rounded-lg border-2 border-[rgb(68,180,125)] bg-[rgb(68,180,125)] px-3 py-2 font-bold text-white hover:bg-[rgb(5,157,110)] transition duration-300"
+                >
                   Donar
                   <i className="bx bx-cart ml-2" />
                 </button>
@@ -87,6 +112,8 @@ const Hero = () => {
           </div>
         ))}
       </div>
+  
+
     </div>
   )
 }

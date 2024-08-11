@@ -9,19 +9,17 @@ const CreateProject = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [cost, setCost] = useState('')
-  const [currency, setCurrency] = useState('ETH')
+  const [currency, setCurrency] = useState('')
   const [startDate, setStartDate] = useState('')
   const [expirationDate, setExpirationDate] = useState('')
+  const [terms, setTerms] = useState(false)
   const [location, setLocation] = useState('')
-  const [logoURL, setLogoURL] = useState('')
+  const [imageURL, setImageURL] = useState('')
   const [socialMedia, setSocialMedia] = useState('')
   const [wallet, setWallet] = useState('')
   const [nit, setNit] = useState('')
-  const [sectorCategory, setSectorCategory] = useState('')
-  const [solutionCategory, setSolutionCategory] = useState('')
   const [fundingReason, setFundingReason] = useState('')
-  const [financialDocs, setFinancialDocs] = useState(null)
-  const [terms, setTerms] = useState(false)
+  const [financialDoc, setFinancialDoc] = useState(null)
 
   const toTimestamp = (dateStr) => {
     const dateObj = Date.parse(dateStr)
@@ -30,24 +28,23 @@ const CreateProject = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!title || !description || !cost || !expirationDate || !terms) return
+    if (!title || !description || !cost || !expirationDate) return
 
     const params = {
       title,
       description,
       cost,
       currency,
-      startDate: toTimestamp(startDate),
+      startDate,
       expiresAt: toTimestamp(expirationDate),
+      terms,
       location,
-      logoURL,
+      imageURL,
       socialMedia,
       wallet,
       nit,
-      sectorCategory,
-      solutionCategory,
       fundingReason,
-      financialDocs,
+      financialDoc,
     }
 
     await createProject(params)
@@ -62,20 +59,19 @@ const CreateProject = () => {
 
   const reset = () => {
     setTitle('')
+    setDescription('')
     setCost('')
-    setCurrency('ETH')
+    setCurrency('')
     setStartDate('')
     setExpirationDate('')
+    setTerms(false)
     setLocation('')
-    setLogoURL('')
+    setImageURL('')
     setSocialMedia('')
     setWallet('')
     setNit('')
-    setSectorCategory('')
-    setSolutionCategory('')
     setFundingReason('')
-    setFinancialDocs(null)
-    setTerms(false)
+    setFinancialDoc(null)
   }
 
   const handleClickOutside = (e) => {
@@ -91,7 +87,7 @@ const CreateProject = () => {
       onClick={handleClickOutside}
     >
       {/* Modal Container */}
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-4xl p-6 relative z-50 overflow-y-auto max-h-full">
+      <div className="bg-white rounded-lg shadow-2xl w-full max-w-6xl p-6 relative z-50">
         {/* Modal Header */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-gray-800">Crear Proyecto</h2>
@@ -105,9 +101,9 @@ const CreateProject = () => {
         </div>
 
         {/* Formulario */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Campo de Título */}
-          <div className="col-span-1">
+        <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
+          {/* Campos de Entrada */}
+          <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-600">Título</label>
             <input
               id="title"
@@ -121,8 +117,7 @@ const CreateProject = () => {
             />
           </div>
 
-          {/* Campo de Costo */}
-          <div className="col-span-1">
+          <div>
             <label htmlFor="cost" className="block text-sm font-medium text-gray-600">Costo</label>
             <input
               id="cost"
@@ -138,14 +133,13 @@ const CreateProject = () => {
             />
           </div>
 
-          {/* Tipo de Moneda */}
-          <div className="col-span-1">
+          <div>
             <label htmlFor="currency" className="block text-sm font-medium text-gray-600">Tipo de Moneda</label>
             <input
               id="currency"
               type="text"
               name="currency"
-              placeholder="ETH, USD, etc."
+              placeholder="Tipo de moneda"
               onChange={(e) => setCurrency(e.target.value)}
               value={currency}
               required
@@ -153,8 +147,7 @@ const CreateProject = () => {
             />
           </div>
 
-          {/* Fecha de Inicio */}
-          <div className="col-span-1">
+          <div>
             <label htmlFor="startDate" className="block text-sm font-medium text-gray-600">Fecha de Inicio</label>
             <input
               id="startDate"
@@ -162,12 +155,12 @@ const CreateProject = () => {
               name="startDate"
               onChange={(e) => setStartDate(e.target.value)}
               value={startDate}
+              required
               className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          {/* Fecha de Expiración */}
-          <div className="col-span-1">
+          <div>
             <label htmlFor="expirationDate" className="block text-sm font-medium text-gray-600">Fecha de Expiración</label>
             <input
               id="expirationDate"
@@ -180,102 +173,83 @@ const CreateProject = () => {
             />
           </div>
 
-          {/* Geolocalización (Google Map) */}
-          <div className="col-span-1">
-            <label htmlFor="location" className="block text-sm font-medium text-gray-600">Geolocalización (Google Map)</label>
+          <div>
+            <label htmlFor="location" className="block text-sm font-medium text-gray-600">Geolocalización</label>
             <input
               id="location"
               type="text"
               name="location"
-              placeholder="URL de la ubicación en Google Maps"
+              placeholder="Geolocalización del lugar"
               onChange={(e) => setLocation(e.target.value)}
               value={location}
               className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          {/* URL del Logo */}
-          <div className="col-span-1">
-            <label htmlFor="logoURL" className="block text-sm font-medium text-gray-600">URL del Logo</label>
+          <div>
+            <label htmlFor="imageURL" className="block text-sm font-medium text-gray-600">URL de la Imagen</label>
             <input
-              id="logoURL"
+              id="imageURL"
               type="url"
-              name="logoURL"
-              placeholder="URL del logo"
-              onChange={(e) => setLogoURL(e.target.value)}
-              value={logoURL}
+              name="imageURL"
+              placeholder="URL de la imagen"
+              onChange={(e) => setImageURL(e.target.value)}
+              value={imageURL}
               className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          {/* Redes Sociales */}
-          <div className="col-span-1">
+          <div>
             <label htmlFor="socialMedia" className="block text-sm font-medium text-gray-600">Redes Sociales</label>
             <input
               id="socialMedia"
               type="text"
               name="socialMedia"
-              placeholder="Enlaces de redes sociales"
+              placeholder="Redes sociales de la persona"
               onChange={(e) => setSocialMedia(e.target.value)}
               value={socialMedia}
               className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          {/* Billetera Virtual */}
-          <div className="col-span-1">
-            <label htmlFor="wallet" className="block text-sm font-medium text-gray-600">Billetera Virtual</label>
+          <div>
+            <label htmlFor="wallet" className="block text-sm font-medium text-gray-600">Billetera Virtual (Wallet)</label>
             <input
               id="wallet"
               type="text"
               name="wallet"
-              placeholder="Dirección de billetera virtual"
+              placeholder="Dirección de la billetera virtual"
               onChange={(e) => setWallet(e.target.value)}
               value={wallet}
               className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          {/* NIT */}
-          <div className="col-span-1">
+          <div>
             <label htmlFor="nit" className="block text-sm font-medium text-gray-600">NIT</label>
             <input
               id="nit"
               type="text"
               name="nit"
-              placeholder="Número de NIT"
+              placeholder="Número de Identificación Tributaria"
               onChange={(e) => setNit(e.target.value)}
               value={nit}
               className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
           </div>
 
-          {/* Categoría por Sectores */}
-          <div className="col-span-1">
-            <label htmlFor="sectorCategory" className="block text-sm font-medium text-gray-600">Categoría por Sectores</label>
+          {/* Términos y Condiciones */}
+          <div className="flex items-center col-span-3">
             <input
-              id="sectorCategory"
-              type="text"
-              name="sectorCategory"
-              placeholder="Categoría del sector"
-              onChange={(e) => setSectorCategory(e.target.value)}
-              value={sectorCategory}
-              className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
+              id="terms"
+              type="checkbox"
+              name="terms"
+              onChange={(e) => setTerms(e.target.checked)}
+              checked={terms}
+              required
+              className="mr-2"
             />
-          </div>
-
-          {/* Categoría por Soluciones */}
-          <div className="col-span-1">
-            <label htmlFor="solutionCategory" className="block text-sm font-medium text-gray-600">Categoría por Soluciones</label>
-            <input
-              id="solutionCategory"
-              type="text"
-              name="solutionCategory"
-              placeholder="Categoría de la solución"
-              onChange={(e) => setSolutionCategory(e.target.value)}
-              value={solutionCategory}
-              className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
-            />
+            <label htmlFor="terms" className="text-sm font-medium text-gray-600">Aceptar Términos y Condiciones</label>
           </div>
 
           {/* Motivo del Financiamiento */}
@@ -287,35 +261,21 @@ const CreateProject = () => {
               placeholder="Motivo del financiamiento"
               onChange={(e) => setFundingReason(e.target.value)}
               value={fundingReason}
+              required
               className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             ></textarea>
           </div>
 
-          {/* Subir Documentos Financieros */}
+          {/* Subir Documentos Financieros Recientes */}
           <div className="col-span-3">
-            <label htmlFor="financialDocs" className="block text-sm font-medium text-gray-600">Documentos Financieros (Opcional)</label>
+            <label htmlFor="financialDoc" className="block text-sm font-medium text-gray-600">Subir Documentos Financieros Recientes (Opcional)</label>
             <input
-              id="financialDocs"
+              id="financialDoc"
               type="file"
-              name="financialDocs"
-              onChange={(e) => setFinancialDocs(e.target.files[0])}
+              name="financialDoc"
+              onChange={(e) => setFinancialDoc(e.target.files[0])}
               className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:ring focus:ring-green-300 focus:border-green-500"
             />
-          </div>
-
-          {/* Términos y Condiciones */}
-          <div className="col-span-3">
-            <label htmlFor="terms" className="flex items-center">
-              <input
-                id="terms"
-                type="checkbox"
-                name="terms"
-                checked={terms}
-                onChange={(e) => setTerms(e.target.checked)}
-                className="mr-2"
-              />
-              <span className="text-sm font-medium text-gray-600">Acepto los términos y condiciones</span>
-            </label>
           </div>
 
           {/* Botón de Envío */}

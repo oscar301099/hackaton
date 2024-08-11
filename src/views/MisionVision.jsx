@@ -1,12 +1,8 @@
-import React from 'react';
-import MisionVision from '../components/MisionVision';
+import React from "react";
+import MisionVision from "../components/MisionVision";
 
 const Home = () => {
-  return (
-    <div>
-      <MisionVision />
-    </div>
-  );
+  return <MisionVision />;
 };
 
 export default Home;

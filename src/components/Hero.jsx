@@ -1,7 +1,26 @@
+import React, { useEffect, useState } from 'react'
 import { setGlobalState, useGlobalState } from '../store'
 
 const Hero = () => {
   const [stats] = useGlobalState('stats')
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/proyect.json')
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        const data = await response.json()
+        setProjects(data.proyectos)
+      } catch (error) {
+        console.error('Error fetching projects:', error)
+      }
+    }
+
+    fetchProjects()
+  }, [])
 
   return (
     <div className="text-center bg-white text-gray-800 py-24 px-6">
@@ -38,17 +57,14 @@ const Hero = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4 mt-10 sm:grid-cols-2 lg:grid-cols-4">
-        {[...Array(4)].map((_, index) => (
+        {projects.map((project, index) => (
           <div key={index} className="relative w-full max-w-xs mx-auto cursor-pointer rounded-md shadow-md hover:shadow-lg transition duration-300">
             <div className="relative overflow-hidden rounded-t-md">
               <img
-                src=""
-                alt=""
+                src={project.foto}
+                alt={project.titulo}
                 className="h-[150px] w-full object-cover rounded-t-md"
               />
-              <span className="absolute right-2 top-2 rounded-sm bg-orange-500 px-2 py-1 text-xs text-white">
-                descuento% Off
-              </span>
               <button
                 className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full px-4 py-2 text-sm shadow-md"
               >
@@ -56,14 +72,14 @@ const Hero = () => {
               </button>
             </div>
             <div className="bg-gray-100 px-4 py-4 rounded-b-md">
-              <h5 className="text-center font-semibold text-[rgb(68,180,125)] border-b pb-2">nombre</h5>
-              <p className="mt-2 text-center text-lg font-semibold text-[rgb(68,180,125)]">precio BTC</p>
-              <p className="mt-2 text-center text-xs text-gray-600">descripción breve</p>
-              <p className="mt-1 text-center text-xs text-gray-600">descripción larga</p>
-              <p className="mt-2 text-center text-xs text-gray-500">Publicado el: fecha</p>
+              <h5 className="text-center font-semibold text-[rgb(68,180,125)] border-b pb-2">{project.titulo}</h5>
+              <p className="mt-2 text-center text-lg font-semibold text-[rgb(68,180,125)]">{project.costo.cantidad} {project.costo.moneda}</p>
+              <p className="mt-2 text-center text-xs text-gray-600">Fecha inicial: {project.fecha_inicial}</p>
+              <p className="mt-2 text-center text-xs text-gray-600">Fecha expiración: {project.fecha_expiracion}</p>
+              <p className="mt-2 text-center text-xs text-gray-500">Motivo: {project.motivo_financiero}</p>
               <div className="mt-4 flex justify-center">
-                <button className="flex items-center justify-center rounded-full border-2 border-[rgb(68,180,125)] bg-[rgb(68,180,125)] px-3 py-2 font-bold text-white hover:bg-[rgb(5,157,110)] transition duration-300">
-                  Agregar al Carrito
+                <button className="flex items-center justify-center rounded-lg border-2 border-[rgb(68,180,125)] bg-[rgb(68,180,125)] px-3 py-2 font-bold text-white hover:bg-[rgb(5,157,110)] transition duration-300">
+                  Donar
                   <i className="bx bx-cart ml-2" />
                 </button>
               </div>

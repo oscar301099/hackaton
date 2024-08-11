@@ -1,33 +1,158 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { FaBitcoin, FaLock, FaMoneyBillWave, FaSeedling, FaLeaf, FaBars } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
-const MisionVision = () => {
+const Header = ({ onLoginRedirect }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <div className="container mx-auto p-6">
-      <section className="my-8">
-        <h2 className="text-3xl font-bold mb-4">Misión</h2>
-        <p className="text-lg">
-          En CriptoSemillas, nuestra misión es proporcionar seguridad financiera a los productores agrícolas mediante seguros basados en criptomonedas. Queremos asegurar que los agricultores tengan un respaldo económico en caso de que sus cosechas se vean afectadas por condiciones climáticas adversas, permitiéndoles continuar con sus operaciones sin interrupciones.
-        </p>
-      </section>
+    <header className="bg-green-700 text-white p-4 md:p-6">
+      <div className="container mx-auto flex justify-between items-center">
+        <h1 className="text-2xl md:text-3xl font-bold">CriptoBolivia</h1>
+        <button
+          className="md:hidden text-white focus:outline-none"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <FaBars size={24} />
+        </button>
+        <nav className={`flex flex-col md:flex-row md:space-x-6 ${menuOpen ? 'block' : 'hidden'} md:block`}>
+          <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-center md:text-left">
+            <li><a href="#" className="hover:underline">Inicio</a></li>
+            <li><a href="#" className="hover:underline">Servicios</a></li>
+            <li><a href="#" className="hover:underline">Nosotros</a></li>
+            <li><a href="#" className="hover:underline">Contacto</a></li>
+          </ul>
+          <button 
+            onClick={onLoginRedirect} 
+            className="bg-white text-green-700 px-4 py-2 rounded-full font-bold hover:bg-gray-100 mt-4 md:mt-0">
+            Iniciar Sesión
+          </button>
+        </nav>
+      </div>
+    </header>
+  );
+};
 
-      <section className="my-8">
-        <h2 className="text-3xl font-bold mb-4">Visión</h2>
-        <p className="text-lg">
-          Nuestra visión es ser la plataforma líder en seguros agrícolas basados en criptomonedas, ofreciendo soluciones innovadoras y accesibles que protejan a los agricultores de todo el mundo. Aspiramos a crear un ecosistema donde la agricultura y la tecnología blockchain se unan para garantizar la estabilidad y el crecimiento del sector agrícola.
-        </p>
-      </section>
+const FeatureCard = ({ icon: Icon, title, description }) => (
+  <div className="bg-gray-100 p-6 rounded-lg text-center shadow-lg hover:shadow-2xl transition-shadow duration-300">
+    <Icon className="text-green-700 text-4xl mx-auto mb-4" />
+    <h3 className="text-2xl font-bold mb-2 text-green-700">{title}</h3>
+    <p className="text-lg">{description}</p>
+  </div>
+);
 
-      <section className="my-8">
-        <h2 className="text-3xl font-bold mb-4">Objetivos</h2>
-        <ul className="list-disc list-inside text-lg">
-          <li>Proporcionar un seguro confiable y accesible a los agricultores basado en Ethereum.</li>
-          <li>Facilitar la transición hacia el uso de criptomonedas en el sector agrícola.</li>
-          <li>Generar confianza y estabilidad en los agricultores al ofrecer una solución financiera en caso de pérdida de cosechas.</li>
-          <li>Expandir nuestra plataforma para llegar a agricultores de todo el mundo.</li>
-        </ul>
-      </section>
+const Section = ({ children, className = '' }) => (
+  <section className={`py-8 md:py-12 ${className}`}>
+    <div className="container mx-auto px-4 md:px-0">{children}</div>
+  </section>
+);
+
+const LandingPage = () => {
+  const navigate = useNavigate();
+
+  const handleLoginRedirect = () => {
+    navigate('/login');
+  };
+
+  useEffect(() => {
+    // Este script se asegura de que el widget de Dialogflow se cargue correctamente
+    const script = document.createElement('script');
+    script.src = 'https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  return (
+    <div className="bg-white text-gray-800 relative">
+      <Header onLoginRedirect={handleLoginRedirect} />
+
+      {/* Hero Section */}
+      <Section className="p-6 md:p-10 text-center bg-gray-100">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Plataforma Segura para Comercio de Criptomonedas en Bolivia</h2>
+          <p className="text-lg mb-6">La mejor solución para proteger tus activos digitales con tecnología de vanguardia.</p>
+          <button className="bg-green-700 text-white px-6 py-3 rounded-full font-bold hover:bg-green-800 transition-transform transform hover:scale-105">
+            Comienza Ahora
+          </button>
+        </div>
+      </Section>
+
+      {/* Features Section */}
+      <Section>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <FeatureCard 
+            icon={FaBitcoin} 
+            title="Mejor Plataforma" 
+            description="La plataforma más confiable y segura en Bolivia." 
+          />
+          <FeatureCard 
+            icon={FaMoneyBillWave} 
+            title="Precios Justos" 
+            description="Transparencia total en precios y tarifas." 
+          />
+          <FeatureCard 
+            icon={FaLock} 
+            title="Seguridad Avanzada" 
+            description="Protege tus activos con la mejor tecnología." 
+          />
+        </div>
+      </Section>
+
+      {/* Mission and Vision Section */}
+      <Section className="bg-green-50">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <FeatureCard 
+            icon={FaSeedling} 
+            title="Misión" 
+            description="Nuestra misión es apoyar al sector agrícola en Bolivia proporcionando asistencia financiera durante crisis climáticas y promoviendo la adopción de prácticas sostenibles. Utilizamos tecnología blockchain y smart contracts para asegurar transparencia y eficiencia en la distribución de los fondos, y nos comprometemos a capacitar a los agricultores para que puedan enfrentar desafíos y construir un futuro agrícola resiliente y sostenible." 
+          />
+          <FeatureCard 
+            icon={FaLeaf} 
+            title="Visión" 
+            description="Nuestra visión es transformar el sector agrícola en Bolivia en un modelo de resiliencia y sostenibilidad. Queremos ser el líder en el apoyo a agricultores mediante la integración de tecnología avanzada y prácticas responsables, creando un entorno agrícola donde la innovación y la transparencia conduzcan a un desarrollo continuo y a la protección del medio ambiente." 
+          />
+        </div>
+      </Section>
+
+      {/* CTA Section */}
+      <Section className="bg-green-100 text-center">
+        <h3 className="text-3xl font-bold mb-6">Únete a la Revolución del Comercio de Criptomonedas</h3>
+        <button className="bg-green-700 text-white px-8 py-3 rounded-full font-bold hover:bg-green-800 transition-transform transform hover:scale-105">
+          Regístrate Ahora
+        </button>
+      </Section>
+
+      {/* Footer */}
+      <footer className="py-6 bg-gray-800 text-white text-center">
+        <p className="mb-4">© 2024 CriptoBolivia. Todos los derechos reservados.</p>
+        <div className="flex justify-center space-x-4">
+          <a href="#" className="hover:underline">Política de Privacidad</a>
+          <a href="#" className="hover:underline">Términos de Servicio</a>
+        </div>
+      </footer>
+
+      {/* Dialogflow Messenger */}
+      <df-messenger 
+        intent="WELCOME" 
+        chat-title="Asistente CriptoBolivia" 
+        agent-id="86938b5f-1e37-43dc-9f38-1bd5322b1eb7" 
+        language-code="es"
+        chat-icon="https://www.gstatic.com/dialogflow-console/fast/messenger/messengericon.svg"  // Icono personalizado
+        chat-title-bot="CryptoBot"
+        chat-title-font="Verdana"
+        chat-title-color="#ffffff"
+        chat-bubble-color="#34d399" // Color de las burbujas de chat
+        background-color="#1f2937" // Color de fondo del widget
+        bot-font-color="#ffffff" // Color del texto del bot
+        user-font-color="#d1fae5" // Color del texto del usuario
+        placeholder-text="Escribe tu mensaje aquí..."
+      ></df-messenger>
     </div>
   );
 };
 
-export default MisionVision;
+export default LandingPage;

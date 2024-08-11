@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import Home from './views/Home'
 import Project from './views/Project'
@@ -10,22 +10,29 @@ import { ToastContainer } from 'react-toastify'
 
 const App = () => {
   const [loaded, setLoaded] = useState(false)
+  const location = useLocation()
 
-  useEffect(async () => {
-    await isWallectConnected()
-    console.log('Blockchain loaded')
-    setLoaded(true)
+  useEffect(() => {
+    const loadBlockchainData = async () => {
+      await isWallectConnected()
+      console.log('Blockchain loaded')
+      setLoaded(true)
+    }
+    loadBlockchainData()
   }, [])
+
+  // Condicionar la visualización del header
+  const showHeader = location.pathname === '/home' || location.pathname.startsWith('/projects')
 
   return (
     <div className="min-h-screen relative">
-      <Header />
+      {showHeader && <Header />}
       {loaded ? (
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/projects/:id" element={<Project />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/mision/vision" element={<MisionVision />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<MisionVision />} />
         </Routes>
       ) : null}
 

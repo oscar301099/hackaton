@@ -14,10 +14,10 @@ const Header = () => {
         <Link to="/" className="hidden md:flex items-center text-xl text-black space-x-2">
           <img
             src="/path-to-logo.jpg" // Reemplaza con la ruta de tu logo
-            alt="FoundBusiness Logo"
+            alt="CryptoSemillaFo Logo"
             className="h-10 w-10 rounded-full"
           />
-          <span className="text-lg">FoundBusiness</span>
+          <span className="text-lg">CryptoSemillaFo</span>
         </Link>
 
         {/* Menú desplegable en móvil */}

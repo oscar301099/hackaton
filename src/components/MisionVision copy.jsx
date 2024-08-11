@@ -41,7 +41,7 @@ const LandingPage = () => {
       {/* Header */}
       <header className="bg-green-700 text-white p-6">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold">CriptoBolivia</h1>
+          <h1 className="text-3xl font-bold">CriptoSemilla</h1>
           <nav>
             <ul className="flex space-x-6">
               <li><a href="#" className="hover:underline">Inicio</a></li>
@@ -121,7 +121,7 @@ const LandingPage = () => {
 
       {/* Footer */}
       <footer className="py-6 bg-gray-800 text-white text-center">
-        <p className="mb-4">© 2024 CriptoBolivia. Todos los derechos reservados.</p>
+        <p className="mb-4">© 2024 CriptoSemilla. Todos los derechos reservados.</p>
         <div className="flex justify-center space-x-4">
           <a href="#" className="hover:underline">Política de Privacidad</a>
           <a href="#" className="hover:underline">Términos de Servicio</a>

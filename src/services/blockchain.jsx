@@ -156,7 +156,7 @@ const backProject = async (id, amount) => {
 
 const getBackers = async (id) => {
   try {
-    if (!ethereum) return alert('Please install Metamask')
+    if (!ethereum) return alert('Please install  ')
     const contract = await getEtheriumContract()
     let backers = await contract.getBackers(id)
 

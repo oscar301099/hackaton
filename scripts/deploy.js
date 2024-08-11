@@ -2,7 +2,13 @@ const hre = require('hardhat');
 const fs = require('fs');
 
 async function main() {
-  const taxFee = 5;
+  const network = hre.network.name;
+  let taxFee = 0;
+
+  if (network !== 'sepolia') {
+    taxFee = 5; // Solo agregar tax si no es Sepolia
+  }
+
   const Contract = await hre.ethers.getContractFactory('Genesis');
   const contract = await Contract.deploy(taxFee);
 

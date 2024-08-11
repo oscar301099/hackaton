@@ -17,17 +17,32 @@ contract AgriculturalCrowdfunding {
     }
     
     mapping(address => Beneficiary) public beneficiaries;
+    mapping(address => bool) public isVerified;  // Mapeo para verificar beneficiarios
+    
+    address public ngoAddress;  // Dirección de la ONG
     
     event FundDonated(address donor, uint256 amount);
     event FundsWithdrawn(address beneficiary, uint256 amount);
+    event BeneficiaryVerified(address beneficiary);
     event BeneficiaryApproved(address beneficiary);
     
-    constructor(uint256 _fundGoal, uint256 _fundDeadline) {
+    constructor(uint256 _fundGoal, uint256 _fundDeadline, address _ngoAddress) {
         owner = msg.sender;
         fundGoal = _fundGoal;
         fundDeadline = _fundDeadline;
         totalFunds = 0;
         goalReached = false;
+        ngoAddress = _ngoAddress;  // Establecer la dirección de la ONG
+    }
+    
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can perform this action.");
+        _;
+    }
+    
+    modifier onlyNgo() {
+        require(msg.sender == ngoAddress, "Only the NGO can perform this action.");
+        _;
     }
     
     function donate() external payable {
@@ -45,6 +60,7 @@ contract AgriculturalCrowdfunding {
     function requestFunds(uint256 amount) external {
         require(goalReached, "Funding goal has not been reached.");
         require(amount > 0, "Requested amount must be greater than 0.");
+        require(isVerified[msg.sender], "Beneficiary not verified.");
         require(beneficiaries[msg.sender].beneficiaryAddress == address(0), "Already requested funds.");
         
         beneficiaries[msg.sender] = Beneficiary({
@@ -55,10 +71,15 @@ contract AgriculturalCrowdfunding {
         });
     }
     
-    function approveFunds(address beneficiary) external {
-        require(msg.sender == owner, "Only the owner can approve funds.");
+    function verifyBeneficiary(address beneficiary) external onlyNgo {
+        isVerified[beneficiary] = true;
+        emit BeneficiaryVerified(beneficiary);
+    }
+    
+    function approveFunds(address beneficiary) external onlyOwner {
         require(goalReached, "Funding goal has not been reached.");
         require(beneficiaries[beneficiary].beneficiaryAddress != address(0), "Beneficiary not found.");
+        require(isVerified[beneficiary], "Beneficiary not verified.");
         require(!beneficiaries[beneficiary].isApproved, "Funds already approved.");
         
         beneficiaries[beneficiary].approvalTime = block.timestamp;
@@ -77,5 +98,5 @@ contract AgriculturalCrowdfunding {
         payable(msg.sender).transfer(amount);
         
         emit FundsWithdrawn(msg.sender, amount);
-    }
+        }
 }

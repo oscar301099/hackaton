@@ -6,7 +6,12 @@ import { toast } from 'react-toastify'
 const Hero = () => {
   const [stats] = useGlobalState('stats')
   const [projects, setProjects] = useState([])
-
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [cost, setCost] = useState('')
+  const [imageURL, setImageURL] = useState('')
+  const [donationProject, setDonationProject] = useState(null) 
+  
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -25,17 +30,22 @@ const Hero = () => {
   }, [])
 
   const handleDonation = async (project) => {
-    try {
-      // Utilizando createProject para realizar la donación, puedes personalizar los parámetros.
-      const params = {
-        title: project.titulo,
-        description: project.motivo_financiero,
-        cost: project.costo.cantidad,
-        expiresAt: new Date(project.fecha_expiracion).getTime() / 1000,
-        imageURL: project.foto,
-      }
+    setDonationProject(project) 
+    const params = {
+      title: project.titulo,
+      description: project.motivo_financiero,
+      cost: project.costo.cantidad,
+      expiresAt: new Date(project.fecha_expiracion).getTime() / 1000,
+      imageURL: project.foto,
+    }
+    handleSubmit(params) 
+  }
 
-      await createProject(params) // Aquí se llama a la función para realizar la acción (que puede ser donación en tu caso)
+  const handleSubmit = async (params) => {
+    try {
+      if (!params.title || !params.description || !params.cost || !params.expiresAt || !params.imageURL) return
+      
+      await createProject(params)
       toast.success('Donation successful!')
     } catch (error) {
       toast.error('Donation failed. Please try again.')
@@ -76,8 +86,6 @@ const Hero = () => {
         </div>
       </div>
 
-
-
       <div className="grid grid-cols-1 gap-4 mt-10 sm:grid-cols-2 lg:grid-cols-4">
         {projects.map((project, index) => (
           <div key={index} className="relative w-full max-w-xs mx-auto cursor-pointer rounded-md shadow-md hover:shadow-lg transition duration-300">
@@ -112,8 +120,6 @@ const Hero = () => {
           </div>
         ))}
       </div>
-  
-
     </div>
   )
 }

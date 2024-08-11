@@ -34,7 +34,7 @@ contract AgriculturalCrowdfunding {
         require(block.timestamp < fundDeadline, "Funding period has ended.");
         require(msg.value > 0, "Donation must be greater than 0.");
         
-        totalFunds += msg.value;git
+        totalFunds += msg.value;
         emit FundDonated(msg.sender, msg.value);
         
         if (totalFunds >= fundGoal) {

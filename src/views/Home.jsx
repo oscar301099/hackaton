@@ -8,7 +8,7 @@ import { useGlobalState } from '../store'
 
 const Home = () => {
   const [projects] = useGlobalState('projects')
-
+  console.log(projects)
   useEffect(async () => {
     await loadProjects()
   }, [])

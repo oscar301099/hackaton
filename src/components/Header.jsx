@@ -8,20 +8,26 @@ const Header = () => {
   const [connectedAccount] = useGlobalState('connectedAccount')
 
   return (
-    <header className="flex justify-between items-center p-5 bg-white shadow-lg fixed top-0 left-0 right-0 z-50">
-      <Link to="/" className="flex items-center text-xl text-black space-x-2">
-        <div className="flex items-center">
+    <header className="flex justify-between items-center p-4 bg-white shadow-lg fixed bottom-0 left-0 right-0 z-50 md:top-0 md:bottom-auto md:p-5 md:flex-row md:justify-between md:bg-gray-50">
+      <div className="flex justify-between items-center w-full md:w-auto">
+        {/* Logo y nombre en vista web */}
+        <Link to="/" className="hidden md:flex items-center text-xl text-black space-x-2">
           <img
             src="/path-to-logo.jpg" // Reemplaza con la ruta de tu logo
             alt="FoundBusiness Logo"
             className="h-10 w-10 rounded-full"
           />
-        </div>
-        <span className="hidden sm:block text-lg">FoundBusiness</span>
-        <TbBusinessplan className="hidden sm:block text-lg" />
-      </Link>
+          <span className="text-lg">FoundBusiness</span>
+        </Link>
 
-      <div className="flex-1 mx-5">
+        {/* Menú desplegable en móvil */}
+        <button className="md:hidden">
+          <i className="bx bx-menu text-2xl"></i>
+        </button>
+      </div>
+
+      {/* Barra de búsqueda en web */}
+      <div className="hidden md:flex flex-1 mx-5">
         <input
           type="text"
           placeholder="Buscar..."
@@ -29,14 +35,14 @@ const Header = () => {
         />
       </div>
 
-      <div className="flex items-center space-x-4">
-        <Link
-          to="/stats"
-          className="flex items-center justify-center rounded-full bg-[rgb(68,180,125)] text-white p-2 text-lg hover:bg-[rgb(5,157,110)] transition-colors duration-300"
-        >
-          <BsBarChart />
+      <div className="flex justify-around items-center space-x-4 w-full md:w-auto">
+        {/* Iconos de navegación */}
+        <Link to="/stats" className="flex flex-col items-center text-gray-600 md:flex-row md:space-x-2">
+          <BsBarChart className="text-2xl" />
+          <span className="hidden md:block">Estadísticas</span>
         </Link>
-        
+
+        {/* Estado de la conexión de la cuenta */}
         {connectedAccount ? (
           <button
             type="button"
@@ -54,6 +60,7 @@ const Header = () => {
           </button>
         )}
 
+        {/* Icono de avatar con menú desplegable */}
         <div className="relative">
           <button
             id="avatar-button"
@@ -92,6 +99,26 @@ const Header = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Barra de navegación inferior en móvil */}
+      <div className="md:hidden flex justify-between w-full">
+        <Link to="/profile" className="flex flex-col items-center text-gray-600">
+          <i className="bx bx-user text-2xl"></i>
+          <span className="text-xs">Perfil</span>
+        </Link>
+        <Link to="/" className="flex flex-col items-center text-gray-600">
+          <i className="bx bx-home-alt text-2xl"></i>
+          <span className="text-xs">Inicio</span>
+        </Link>
+        <Link to="/favorites" className="flex flex-col items-center text-gray-600">
+          <i className="bx bx-heart text-2xl"></i>
+          <span className="text-xs">Favoritos</span>
+        </Link>
+        <Link to="/more" className="flex flex-col items-center text-gray-600">
+          <i className="bx bx-grid-alt text-2xl"></i>
+          <span className="text-xs">Más</span>
+        </Link>
       </div>
     </header>
   )
